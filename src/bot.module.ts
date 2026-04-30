@@ -10,12 +10,6 @@ import { RegistrationScene } from './scenes/registration.scene';
     TelegrafModule.forRoot({
       token: process.env.BOT_TOKEN || '',
       middlewares: [session()],
-      launchOptions: {
-        webhook: {
-          domain: process.env.WEBHOOK_URL as string,
-          path: '/webhook',
-        },
-      },
     }),
   ],
   providers: [BotUpdate, PaymentUpdate, RegistrationScene],
