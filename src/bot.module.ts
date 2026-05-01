@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { TelegrafModule } from 'nestjs-telegraf';
-import { session } from 'telegraf';
 import { BotUpdate } from './bot.update';
 import { PaymentUpdate } from './payment.update';
 import { RegistrationScene } from './scenes/registration.scene';
@@ -9,7 +8,7 @@ import { RegistrationScene } from './scenes/registration.scene';
   imports: [
     TelegrafModule.forRoot({
       token: process.env.BOT_TOKEN || '',
-      middlewares: [session()],
+      middlewares: [],
     }),
   ],
   providers: [BotUpdate, PaymentUpdate, RegistrationScene],

@@ -16,7 +16,7 @@ import { MENU, getByCategory, getById, Product } from './data/menu.data';
 
 @Update()
 export class BotUpdate {
-  constructor(@InjectBot() private readonly bot: Telegraf<Context>) {}
+  constructor(@InjectBot() private readonly bot: Telegraf<Context>) { }
 
   // ============================================================
   // /START — Ro'yxatdan o'tish yoki Asosiy menyu
@@ -25,20 +25,16 @@ export class BotUpdate {
   async onStart(@Ctx() ctx: Context) {
     const session = (ctx as any).session;
 
-    // Agar foydalanuvchi ro'yxatdan o'tmagan bo'lsa → Scene'ga kiramiz
+    if (!session) (ctx as any).session = {};
+
     if (!session?.step || session.step !== 'done') {
       await (ctx as any).scene.enter(REGISTRATION_SCENE);
       return;
     }
 
-    // Ro'yxatdan o'tgan → Asosiy menyuni ko'rsatamiz
     await ctx.reply(
-      `👋 Xush kelibsiz, <b>${session.name}</b>!\n\n` +
-        '🍽 Nimа buyurtma qilasiz?',
-      {
-        parse_mode: 'HTML',
-        ...mainMenuKeyboard(),
-      },
+      `👋 Xush kelibsiz, <b>${session.name}</b>!\n\n🍽 Nimа buyurtma qilasiz?`,
+      { parse_mode: 'HTML', ...mainMenuKeyboard() },
     );
   }
 
@@ -54,8 +50,8 @@ export class BotUpdate {
 
     await ctx.reply(
       '🥤 <b>Ichimliklar menyusi</b>\n\n' +
-        `${list}\n\n` +
-        'Quyidan kerakli mahsulotni tanlang 👇',
+      `${list}\n\n` +
+      'Quyidan kerakli mahsulotni tanlang 👇',
       {
         parse_mode: 'HTML',
         ...drinksKeyboard(),
@@ -75,8 +71,8 @@ export class BotUpdate {
 
     await ctx.reply(
       '🍔 <b>Yeguliklar menyusi</b>\n\n' +
-        `${list}\n\n` +
-        'Quyidan kerakli mahsulotni tanlang 👇',
+      `${list}\n\n` +
+      'Quyidan kerakli mahsulotni tanlang 👇',
       {
         parse_mode: 'HTML',
         ...foodKeyboard(),
@@ -96,8 +92,8 @@ export class BotUpdate {
 
     await ctx.reply(
       '🍰 <b>Shirinliklar menyusi</b>\n\n' +
-        `${list}\n\n` +
-        'Quyidan kerakli mahsulotni tanlang 👇',
+      `${list}\n\n` +
+      'Quyidan kerakli mahsulotni tanlang 👇',
       {
         parse_mode: 'HTML',
         ...sweetsKeyboard(),
@@ -252,8 +248,8 @@ export class BotUpdate {
 
     await ctx.reply(
       '🛒 <b>Savatchangizdagi mahsulotlar:</b>\n\n' +
-        `${items}\n\n` +
-        `💰 <b>Jami: ${total.toLocaleString()} so'm</b>`,
+      `${items}\n\n` +
+      `💰 <b>Jami: ${total.toLocaleString()} so'm</b>`,
       {
         parse_mode: 'HTML',
         ...cartKeyboard(),
@@ -275,13 +271,13 @@ export class BotUpdate {
     await ctx.answerCbQuery('');
     await ctx.reply(
       `✅ <b>${product.name}</b> buyurtma berilmoqda...\n\n` +
-        `📋 <b>Buyurtma ma'lumotlari:</b>\n` +
-        `👤 Ism: ${session.name}\n` +
-        `📱 Tel: ${session.phone}\n` +
-        `📍 Manzil: ${typeof session.location === 'string' ? session.location : `GPS (${session.location?.lat}, ${session.location?.lon})`}\n` +
-        `🍽 Mahsulot: ${product.name}\n` +
-        `💰 Narx: ${product.price.toLocaleString()} so'm\n\n` +
-        'Buyurtmani tasdiqlaysizmi?',
+      `📋 <b>Buyurtma ma'lumotlari:</b>\n` +
+      `👤 Ism: ${session.name}\n` +
+      `📱 Tel: ${session.phone}\n` +
+      `📍 Manzil: ${typeof session.location === 'string' ? session.location : `GPS (${session.location?.lat}, ${session.location?.lon})`}\n` +
+      `🍽 Mahsulot: ${product.name}\n` +
+      `💰 Narx: ${product.price.toLocaleString()} so'm\n\n` +
+      'Buyurtmani tasdiqlaysizmi?',
       {
         parse_mode: 'HTML',
         ...confirmOrderKeyboard(),
@@ -318,8 +314,8 @@ export class BotUpdate {
     await ctx.answerCbQuery(`✅ ${product.name} savatga qo'shildi!`);
     await ctx.reply(
       `➕ <b>${product.name}</b> savatga qo'shildi!\n` +
-        `🛒 Savatchada: ${session.cart.length} xil mahsulot\n` +
-        `💰 Jami: ${total.toLocaleString()} so'm`,
+      `🛒 Savatchada: ${session.cart.length} xil mahsulot\n` +
+      `💰 Jami: ${total.toLocaleString()} so'm`,
       { parse_mode: 'HTML' },
     );
   }
@@ -360,9 +356,9 @@ export class BotUpdate {
     await ctx.editMessageReplyMarkup(null);
     await ctx.reply(
       '🎉 <b>Buyurtmangiz qabul qilindi!</b>\n\n' +
-        '🚴 Kuryer tez orada siz bilan bog\'lanadi.\n' +
-        '⏱ Taxminiy vaqt: 30-45 daqiqa\n\n' +
-        'Rahmat! Yana buyurtma berish uchun /start bosing',
+      '🚴 Kuryer tez orada siz bilan bog\'lanadi.\n' +
+      '⏱ Taxminiy vaqt: 30-45 daqiqa\n\n' +
+      'Rahmat! Yana buyurtma berish uchun /start bosing',
       {
         parse_mode: 'HTML',
         ...mainMenuKeyboard(),
@@ -407,11 +403,11 @@ export class BotUpdate {
     await ctx.answerCbQuery('');
     await ctx.reply(
       '📋 <b>Buyurtma tafsilotlari:</b>\n\n' +
-        `${items}\n\n` +
-        `💰 <b>JAMI: ${total.toLocaleString()} so'm</b>\n\n` +
-        `👤 ${session.name} | 📱 ${session.phone}\n` +
-        `📍 ${typeof session.location === 'string' ? session.location : 'GPS manzil'}\n\n` +
-        'Buyurtmani tasdiqlaysizmi?',
+      `${items}\n\n` +
+      `💰 <b>JAMI: ${total.toLocaleString()} so'm</b>\n\n` +
+      `👤 ${session.name} | 📱 ${session.phone}\n` +
+      `📍 ${typeof session.location === 'string' ? session.location : 'GPS manzil'}\n\n` +
+      'Buyurtmani tasdiqlaysizmi?',
       {
         parse_mode: 'HTML',
         ...confirmOrderKeyboard(),
@@ -445,11 +441,11 @@ export class BotUpdate {
   async onContact(@Ctx() ctx: Context) {
     await ctx.reply(
       '📞 <b>Biz bilan bog\'laning</b>\n\n' +
-        '👨‍💼 Operator: @fastfood_admin\n' +
-        '📱 Telefon: +998 90 123 45 67\n' +
-        '⏰ Ish vaqti: 09:00 - 23:00\n' +
-        '📍 Manzil: Toshkent, Chilonzor tumani\n\n' +
-        '💬 Savollar uchun operatorga murojaat qiling!',
+      '👨‍💼 Operator: @fastfood_admin\n' +
+      '📱 Telefon: +998 90 123 45 67\n' +
+      '⏰ Ish vaqti: 09:00 - 23:00\n' +
+      '📍 Manzil: Toshkent, Chilonzor tumani\n\n' +
+      '💬 Savollar uchun operatorga murojaat qiling!',
       {
         parse_mode: 'HTML',
         ...mainMenuKeyboard(),
